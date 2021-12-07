@@ -93,36 +93,8 @@
     <string>串口设置</string>
    </property>
    <layout class="QGridLayout" name="gridLayout">
-    <item row="2" column="0">
-     <widget class="QLabel" name="label_3">
-      <property name="text">
-       <string>停止位</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="2">
-     <widget class="QComboBox" name="comboBox"/>
-    </item>
-    <item row="4" column="0" colspan="2">
-     <widget class="QLabel" name="label_5">
-      <property name="text">
-       <string>奇偶校验</string>
-      </property>
-     </widget>
-    </item>
-    <item row="5" column="0" colspan="2">
-     <widget class="QLabel" name="label_6">
-      <property name="text">
-       <string>串口操作</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="0">
-     <widget class="QLabel" name="label_2">
-      <property name="text">
-       <string>波特率</string>
-      </property>
-     </widget>
+    <item row="0" column="2">
+     <widget class="QComboBox" name="comboBox_5"/>
     </item>
     <item row="5" column="2">
      <widget class="QCheckBox" name="checkBox">
@@ -131,19 +103,29 @@
       </property>
      </widget>
     </item>
-    <item row="3" column="2">
-     <widget class="QComboBox" name="comboBox_3"/>
-    </item>
-    <item row="2" column="2">
-     <widget class="QComboBox" name="comboBox_2"/>
-    </item>
-    <item row="4" column="2">
-     <widget class="QComboBox" name="comboBox_4"/>
-    </item>
     <item row="0" column="0">
      <widget class="QLabel" name="label">
       <property name="text">
        <string>串口</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="2">
+     <widget class="QComboBox" name="comboBox"/>
+    </item>
+    <item row="2" column="2">
+     <widget class="QComboBox" name="comboBox_2"/>
+    </item>
+    <item row="3" column="2">
+     <widget class="QComboBox" name="comboBox_3"/>
+    </item>
+    <item row="4" column="2">
+     <widget class="QComboBox" name="comboBox_4"/>
+    </item>
+    <item row="1" column="0">
+     <widget class="QLabel" name="label_2">
+      <property name="text">
+       <string>波特率</string>
       </property>
      </widget>
     </item>
@@ -154,8 +136,40 @@
       </property>
      </widget>
     </item>
-    <item row="0" column="2">
-     <widget class="QComboBox" name="comboBox_5"/>
+    <item row="5" column="0" colspan="2">
+     <widget class="QLabel" name="label_6">
+      <property name="text">
+       <string>串口操作</string>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="2">
+     <widget class="QCheckBox" name="checkBox_2">
+      <property name="text">
+       <string>绘制</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QLabel" name="label_3">
+      <property name="text">
+       <string>停止位</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="0" colspan="2">
+     <widget class="QLabel" name="label_5">
+      <property name="text">
+       <string>奇偶校验</string>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="0">
+     <widget class="QLabel" name="label_8">
+      <property name="text">
+       <string>绘图</string>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>

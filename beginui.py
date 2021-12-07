@@ -54,16 +54,29 @@ class Ui_Form(object):
         font.setPointSize(15)
         self.label_3.setFont(font)
         self.label_3.setObjectName("label_3")
+        self.label_4 = QtWidgets.QLabel(Form)
+        self.label_4.setGeometry(QtCore.QRect(240, 340, 81, 21))
+        font = QtGui.QFont()
+        font.setPointSize(15)
+        self.label_4.setFont(font)
+        self.label_4.setObjectName("label_4")
+        self.lineEdit = QtWidgets.QLineEdit(Form)
+        self.lineEdit.setGeometry(QtCore.QRect(350, 340, 131, 31))
+        font = QtGui.QFont()
+        font.setPointSize(15)
+        self.lineEdit.setFont(font)
+        self.lineEdit.setObjectName("lineEdit")
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Form", "Form"))
-        self.label.setText(_translate("Form", "Micro/Nano Electronic Devices Research group"))
+        Form.setWindowTitle(_translate("Form", "main"))
+        self.label.setText(_translate("Form", "Micro/Nano Electronic Devices Research Group"))
         self.label_2.setText(_translate("Form", "port1"))
         self.pushButton.setText(_translate("Form", "连接"))
         self.pushButton_2.setText(_translate("Form", "波形显示"))
         self.label_3.setText(_translate("Form", "port2"))
+        self.label_4.setText(_translate("Form", "password"))
 import image_rc
