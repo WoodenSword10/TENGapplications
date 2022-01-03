@@ -9,8 +9,8 @@ import DoorLock
 import beginui
 import port
 import numpy as np
-from PyQt5.QtCore import QThread, pyqtSignal, QMutex, Qt
-
+from PyQt5.QtCore import QThread, pyqtSignal, QMutex, Qt, QDateTime, QTimer
+import windows
 sensor_data = []
 
 class save_Data_txt(QThread):
@@ -19,7 +19,7 @@ class save_Data_txt(QThread):
 
     def run(self):
         while True:
-            with open('./data.txt', 'w') as files:
+            with open('data1.txt', 'w') as files:
                 for item in sensor_data[1:]:
                     files.write(str(item))
                     files.write('\n')
@@ -142,6 +142,7 @@ class beginWindow(QMainWindow, beginui.Ui_Form):
             self.mySignal2.emit(self.comboBox_2.currentText())
             self.Port_win.checkBox.setChecked(True)
         self.My_win.show()
+        self.hide()
 
     def port_plot(self):
         if not self.is_port_open:
@@ -256,17 +257,17 @@ class portWindow(QMainWindow, port.Ui_Dialog):
                     self.is_collect = False
                     self.max_data = max(self.big_data)
                     if self.max_data > 3290:
-                        print('8')
-                        self.mySignal3.emit('8')
-                    elif self.max_data > 2800:
-                        print('0')
-                        self.mySignal3.emit('0')
-                    elif self.max_data > 2200:
+                        print('2')
+                        self.mySignal3.emit('2')
+                    elif self.max_data > 2700:
                         print('5')
                         self.mySignal3.emit('5')
-                    # else:
-                        # print('2')
-                        # self.mySignal3.emit('2')
+                    elif self.max_data > 2340:
+                        print('0')
+                        self.mySignal3.emit('0')
+                    elif self.max_data > 2000:
+                        print('8')
+                        self.mySignal3.emit('8')
                     self.big_data = []
                     print('b' + str(self.max_data))
                     self.k = 0
@@ -290,6 +291,30 @@ class MyWindow(QMainWindow, DoorLock.Ui_Form):
         self.thread1.re_data.connect(self.change_color)
         self.mySignal4.connect(self.change_color)
         self.mySignal5.connect(self.send_data)
+        # 1
+        self.pushButton.clicked.connect(self.textadd1)
+        # 2
+        self.pushButton_2.clicked.connect(self.textadd2)
+        # 3
+        self.pushButton_7.clicked.connect(self.textadd3)
+        # 4
+        self.pushButton_6.clicked.connect(self.textadd4)
+        # 5
+        self.pushButton_3.clicked.connect(self.textadd5)
+        # 6
+        self.pushButton_8.clicked.connect(self.textadd6)
+        # 7
+        self.pushButton_5.clicked.connect(self.textadd7)
+        # 8
+        self.pushButton_4.clicked.connect(self.textadd8)
+        # 9
+        self.pushButton_9.clicked.connect(self.textadd9)
+        # 0
+        self.pushButton_11.clicked.connect(self.textadd0)
+        # clear
+        self.pushButton_10.clicked.connect(self.textadda)
+        # close
+        self.pushButton_12.clicked.connect(self.textaddb)
 
     def send_data(self, connect):
         if connect == '1':
@@ -416,12 +441,15 @@ class MyWindow(QMainWindow, DoorLock.Ui_Form):
             self.is_full = True
             if text == self.password:
                 self.mySignal5.emit('1')
-                box = QMessageBox()
-                box.setWindowTitle('massage')
-                box.setText('<h1><center>The password is true !</center></h1>')
-                box.setStandardButtons(QMessageBox.Ok)  # QMessageBox显示的按钮
-                box.button(QMessageBox.Ok).animateClick(1000)  # t时间后自动关闭(t单位为毫秒)
-                box.exec_()
+                # box = QMessageBox()
+                # box.setWindowTitle('massage')
+                # box.setText('<h1><center>The password is true !</center></h1>')
+                # box.setStandardButtons(QMessageBox.Ok)  # QMessageBox显示的按钮
+                # box.button(QMessageBox.Ok).animateClick(1000)  # t时间后自动关闭(t单位为毫秒)
+                # box.exec_()
+                self.hide()
+                self.windows = windows()
+                self.windows.show()
             else:
                 box = QMessageBox()
                 box.setWindowTitle('massage')
@@ -449,6 +477,70 @@ class MyWindow(QMainWindow, DoorLock.Ui_Form):
         box.setStandardButtons(QMessageBox.Ok)  # QMessageBox显示的按钮
         box.button(QMessageBox.Ok).animateClick(1000)  # t时间后自动关闭(t单位为毫秒)
         box.exec_()
+
+    def textadd0(self):
+        self.textBrowser.insertPlainText('0')
+        QApplication.processEvents()
+
+    def textadd1(self):
+        self.textBrowser.insertPlainText('1')
+        QApplication.processEvents()
+
+    def textadd2(self):
+        self.textBrowser.insertPlainText('2')
+        QApplication.processEvents()
+
+    def textadd3(self):
+        self.textBrowser.insertPlainText('3')
+        QApplication.processEvents()
+
+    def textadd4(self):
+        self.textBrowser.insertPlainText('4')
+
+    def textadd5(self):
+        self.textBrowser.insertPlainText('5')
+
+    def textadd6(self):
+        self.textBrowser.insertPlainText('6')
+
+    def textadd7(self):
+        self.textBrowser.insertPlainText('7')
+
+    def textadd8(self):
+        self.textBrowser.insertPlainText('8')
+
+    def textadd9(self):
+        self.textBrowser.insertPlainText('9')
+
+    def textadda(self):
+        str1 = self.textBrowser.toPlainText()[:-1]
+        self.textBrowser.clear()
+        self.textBrowser.insertPlainText(str1)
+
+    def textaddb(self):
+        self.textBrowser.insertPlainText('。')
+
+
+class windows(QMainWindow, windows.Ui_Dialog):
+    def __init__(self):
+        super(windows, self).__init__()
+        self.setupUi(self)
+        self.showtime()
+        self.timer = QTimer()
+        self.timer.start(1000)  # 每过5秒，定时器到期，产生timeout的信号
+        self.timer.timeout.connect(self.showtime)
+
+    def showtime(self):
+        time = QDateTime.currentDateTime()  # 获取当前时间
+        timedisplay = time.toString("yyyy/MM/dd hh:mm:ss dddd")  # 格式化一下时间
+        # print(timedisplay)
+        # print(type(timedisplay))
+        data = timedisplay[:10]
+        nowtime = timedisplay[10:19]
+        self.textBrowser.setText(data)
+        self.textBrowser_2.setText(nowtime)
+
+
 
 if __name__ == '__main__':
     # 实现不同分辨率下的电脑上的相同显示

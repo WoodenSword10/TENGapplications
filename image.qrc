@@ -1,5 +1,11 @@
 <RCC>
-  <qresource prefix="newPrefix">
-    <file>jndxxh.jpg</file>
+  <qresource prefix="my">
+    <file>static/img/begin.jpg</file>
+    <file>static/img/open.jpg</file>
+    <file>static/img/time.png</file>
+    <file>static/img/humiditysystem.jpg</file>
+    <file>static/img/mycomputer.jpg</file>
+    <file>static/img/desktop.jpg</file>
+    <file>static/img/jndxxh.jpg</file>
   </qresource>
 </RCC>
