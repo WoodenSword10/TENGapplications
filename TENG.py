@@ -41,6 +41,9 @@ class Find_port(QThread):
                 QThread.msleep(1000)
 
 class recv_data(QThread):
+    '''
+    放大模块数据的获取
+    '''
     update_pb = pyqtSignal(int)
     port = serial.Serial()
     is_run = False
@@ -71,10 +74,13 @@ class recv_data(QThread):
                         dat = int(dat)
                         self.update_pb.emit(dat)
                         sensor_data.append(dat)
-                        # print(dat)
+                        # print('放大模块：', dat)
 
 class recv_data_2(QThread):
-    re_data = pyqtSignal(str)
+    '''
+    arduino板子数据的获取
+    '''
+    re_data = pyqtSignal(str, int)
     port = serial.Serial()
     is_run = False
     def __init__(self):
@@ -84,18 +90,25 @@ class recv_data_2(QThread):
         self.port = port
         self.is_run = is_open
 
+    def change_state(self, is_run):
+        self.is_run = is_run
+
     def run(self):
-        while self.is_run:
-            try:
-                data = self.port.readline()
-            except:
-                # print('---')
-                continue
+        while True:
+            if self.is_run:
+                try:
+                    data = self.port.readline()
+                except:
+                    # print('---')
+                    continue
+                else:
+                    # print(data, len(data), type(data))
+                    data = str(data, encoding="utf-8")
+                    self.re_data.emit(data, 0)
+                    print('arduino: ', data)
             else:
-                # print(data, len(data), type(data))
-                data = str(data, encoding="utf-8")
-                self.re_data.emit(data)
-                # print(data)
+                QThread.msleep(2000)
+                self.is_run = True
         pass
 
 class beginWindow(QMainWindow, beginui.Ui_Form):
@@ -105,6 +118,7 @@ class beginWindow(QMainWindow, beginui.Ui_Form):
     def __init__(self, parent=None):
         super(beginWindow, self).__init__(parent)
         self.setupUi(self)
+        # 获取存在的端口号
         self.port_find()
         self.thread4 = save_Data_txt()
         self.thread4.start()
@@ -113,12 +127,15 @@ class beginWindow(QMainWindow, beginui.Ui_Form):
         self.thread3.start()
         self.My_win = MyWindow()
         self.Port_win = portWindow()
+        self.My_win.thread1.re_data.connect(self.decision)
+        self.Port_win.mySignal3.connect(self.decision)
         self.mySignal1.connect(self.My_win.get_port)
         self.mySignal2.connect(self.Port_win.getBeginSignal)
         self.Port_win.mySignal3.connect(self.My_win.getPortData)
         self.Port_win.mySignal3.connect(self.My_win.change_color)
         self.pushButton.clicked.connect(self.port_conn)
         self.pushButton_2.clicked.connect(self.port_plot)
+        self.old_time = time.time()
 
     def port_find(self):
         self.comboBox.clear()
@@ -144,6 +161,15 @@ class beginWindow(QMainWindow, beginui.Ui_Form):
         self.My_win.show()
         self.hide()
 
+    def decision(self, data, i):
+        new_time = time.time()
+        if new_time - self.old_time > 1:
+            if i == 0:
+                self.My_win.getPortData(data)
+            else:
+                self.My_win.recv_data(data)
+        self.old_time = time.time()
+
     def port_plot(self):
         if not self.is_port_open:
             self.is_port_open = True
@@ -153,7 +179,7 @@ class beginWindow(QMainWindow, beginui.Ui_Form):
         pass
 
 class portWindow(QMainWindow, port.Ui_Dialog):
-    mySignal3 = pyqtSignal(str)
+    mySignal3 = pyqtSignal(str, int)
     # 用来接收串口数据
     data = np.zeros(500)
     # 串口实例化，用于连接串口
@@ -256,18 +282,18 @@ class portWindow(QMainWindow, port.Ui_Dialog):
                 if self.is_collect:
                     self.is_collect = False
                     self.max_data = max(self.big_data)
-                    if self.max_data > 3290:
+                    if self.max_data > 3100:
                         print('2')
-                        self.mySignal3.emit('2')
-                    elif self.max_data > 2700:
+                        self.mySignal3.emit('2', 1)
+                    elif self.max_data > 2600:
                         print('5')
-                        self.mySignal3.emit('5')
-                    elif self.max_data > 2340:
+                        self.mySignal3.emit('5', 1)
+                    elif self.max_data > 2200:
                         print('0')
-                        self.mySignal3.emit('0')
-                    elif self.max_data > 2000:
+                        self.mySignal3.emit('0', 1)
+                    else:
                         print('8')
-                        self.mySignal3.emit('8')
+                        self.mySignal3.emit('8', 1)
                     self.big_data = []
                     print('b' + str(self.max_data))
                     self.k = 0
@@ -282,12 +308,14 @@ class MyWindow(QMainWindow, DoorLock.Ui_Form):
     mySignal4 = pyqtSignal(str)
     mySignal5 = pyqtSignal(str)
     is_full = False
+    is_arduino = False
     def __init__(self, parent=None):
         super(MyWindow, self).__init__(parent)
+        self.old_time = time.time()
         self.setupUi(self)
         self.textBrowser.textChanged.connect(self.check_password)
         self.thread1 = recv_data_2()
-        self.thread1.re_data.connect(self.recv_data)
+        # self.thread1.re_data.connect(self.recv_data)
         self.thread1.re_data.connect(self.change_color)
         self.mySignal4.connect(self.change_color)
         self.mySignal5.connect(self.send_data)
@@ -409,27 +437,34 @@ class MyWindow(QMainWindow, DoorLock.Ui_Form):
             if data == 'b':
                 self.textBrowser.insertPlainText('。')
             elif data == 'a':
+                self.textadda()
                 self.mySignal5.emit('2')
                 pass
             elif data == '0':
                 self.textBrowser.insertPlainText('0')
             elif data == '1':
+                print('1')
                 self.textBrowser.insertPlainText('1')
             elif data == '2':
                 self.textBrowser.insertPlainText('2')
             elif data == '3':
+                print('3')
                 self.textBrowser.insertPlainText('3')
             elif data == '4':
+                print('4')
                 self.textBrowser.insertPlainText('4')
             elif data == '5':
                 self.textBrowser.insertPlainText('5')
             elif data == '6':
+                print('6')
                 self.textBrowser.insertPlainText('6')
             elif data == '7':
+                print('7')
                 self.textBrowser.insertPlainText('7')
             elif data == '8':
                 self.textBrowser.insertPlainText('8')
             elif data == '9':
+                print('9')
                 self.textBrowser.insertPlainText('9')
 
     def check_password(self):
