@@ -71,6 +71,8 @@
 import time
 
 old_time = time.time()
+print(old_time)
 time.sleep(2)
 now_time = time.time()
+print(now_time)
 print(now_time-old_time)
