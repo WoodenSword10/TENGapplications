@@ -1,0 +1,2 @@
+# TENGapplications
+摩擦电或压电传感器阵列应用之密码锁系统
